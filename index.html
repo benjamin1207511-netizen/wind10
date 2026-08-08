@@ -179,7 +179,7 @@
         <button class="calc-btn" onclick="calcAll()">全部计算</button>
 
         <div class="result-box" id="resultBox">
-            <div class="result-item"><strong>10米基准风速：</strong><span id="u10"></span> m/s</div>
+            <div class="result-item"><strong id="u10Title">10米基准风速：</strong><span id="u10"></span> m/s</div>
             <div class="result-item"><strong>观测风向：</strong><span id="dirOut"></span> °</div>
             <div class="result-item"><strong>10m高度风动压：</strong><span id="pressure"></span> hPa</div>
             <div class="result-item"><strong>查表阵风系数G<sub>τ,T<sub>0</sub></sub>：</strong><span id="gustFactor"></span></div>
@@ -235,6 +235,7 @@
         const baseLabel = document.getElementById('baseLabel');
         const targetLabel = document.getElementById('targetLabel');
         const finalLabel = document.getElementById('finalLabel');
+        const u10Title = document.getElementById('u10Title');
         modeRadios.forEach(radio=>{
             radio.addEventListener('change',()=>{
                 if(radio.value==='forward'){
@@ -242,11 +243,13 @@
                     baseLabel.innerHTML = '基准平均风时长（T<sub>0</sub>）';
                     targetLabel.textContent = '目标阵风持续时长（τ）';
                     finalLabel.textContent = '目标阵风风速：';
+                    u10Title.textContent = '10米基准风速：';
                 }else{
                     windInputLabel.textContent = 'Z高度实测阵风风速 Uz（m/s）';
                     baseLabel.innerHTML = '阵风原始时长（τ）';
                     targetLabel.textContent = '待求平均风时长（T<sub>0</sub>）';
                     finalLabel.textContent = '目标平均风速：';
+                    u10Title.textContent = '10米阵风风速：';
                 }
             })
         })
