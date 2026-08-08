@@ -161,6 +161,7 @@
                 <option value="180">180s（3分钟平均）</option>
                 <option value="120">120s（2分钟平均）</option>
                 <option value="60">60s（1分钟平均）</option>
+                <option value="3">3s（瞬时阵风）</option>
             </select>
         </div>
         <div class="form-item">
@@ -168,9 +169,10 @@
             <select id="tau">
                 <option value="3">3s（瞬时阵风）</option>
                 <option value="60">60s</option>
-                <option value="120">120s</option>
+                <option value="120">120s（2分钟平均）</option>
                 <option value="180">180s</option>
                 <option value="600">600s</option>
+                <option value="3600">3600s（1小时平均）</option>
             </select>
         </div>
 
@@ -242,8 +244,8 @@
                     finalLabel.textContent = '目标阵风风速：';
                 }else{
                     windInputLabel.textContent = 'Z高度实测阵风风速 Uz（m/s）';
-                    baseLabel.innerHTML = '阵风原始时长（T<sub>0</sub>）';
-                    targetLabel.textContent = '待求平均风时长（τ）';
+                    baseLabel.innerHTML = '阵风原始时长（τ）';
+                    targetLabel.textContent = '待求平均风时长（T<sub>0</sub>）';
                     finalLabel.textContent = '目标平均风速：';
                 }
             })
@@ -256,8 +258,15 @@
             const Uz = parseFloat(document.getElementById('Uz').value);
             const windDir = document.getElementById('windDir').value;
             const terrain = document.getElementById('terrain').value;
-            const T0 = parseInt(document.getElementById('To').value);
-            const tau = parseInt(document.getElementById('tau').value);
+            let T0, tau;
+            if(calcMode === 'forward'){
+                T0 = parseInt(document.getElementById('To').value);
+                tau = parseInt(document.getElementById('tau').value);
+            }else{
+                //反向模式互换两个时长，To选择框是τ阵风时长，tau选择框是T0基准时长
+                tau = parseInt(document.getElementById('To').value);
+                T0 = parseInt(document.getElementById('tau').value);
+            }
 
             if(isNaN(Z)||isNaN(Uz)||Z<=0||Uz<=0){
                 alert("请填写有效的观测高度与风速数值");
