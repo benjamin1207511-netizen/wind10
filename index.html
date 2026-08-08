@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10m高度风速+台风阵风换算工具</title>
+    <title>10m高度风速+台风阵风双向换算工具</title>
     <style>
         * {
             margin: 0;
@@ -47,6 +47,10 @@
             margin-bottom: 6px;
             font-weight: 500;
         }
+        sub {
+            font-size: 0.75em;
+            vertical-align: sub;
+        }
         input,select {
             width: 100%;
             height: 46px;
@@ -58,6 +62,21 @@
         input:focus,select:focus {
             outline: none;
             border-color: #3182ce;
+        }
+        .radio-group{
+            display:flex;
+            gap:20px;
+            height:46px;
+            align-items:center;
+        }
+        .radio-item{
+            display:flex;
+            align-items:center;
+            gap:6px;
+        }
+        .radio-item input{
+            width:auto;
+            height:auto;
         }
         .calc-btn {
             width: 100%;
@@ -96,23 +115,35 @@
 </head>
 <body>
     <div class="container">
-        <h1>10m高度风速+台风阵风换算工具</h1>
+        <h1>10m高度风速+台风阵风双向换算工具</h1>
 
-        <div class="block-title">一、高度订正输入</div>
+        <div class="block-title">一、换算模式选择</div>
+        <div class="form-item radio-group">
+            <div class="radio-item">
+                <input type="radio" name="calcMode" id="modeForward" value="forward" checked>
+                <label for="modeForward">正向换算（平均风→阵风）</label>
+            </div>
+            <div class="radio-item">
+                <input type="radio" name="calcMode" id="modeReverse" value="reverse">
+                <label for="modeReverse">反向换算（阵风→平均风）</label>
+            </div>
+        </div>
+
+        <div class="block-title">二、高度订正输入</div>
         <div class="form-item">
             <label>测风仪器离地高度 Z（m）</label>
-            <input type="number" id="Z" step="0.01" placeholder="例如：20">
+            <input type="number" id="Z" step="0.01" placeholder="例如：4.7">
         </div>
         <div class="form-item">
-            <label>Z高度实测平均风速 Uz（m/s）</label>
-            <input type="number" id="Uz" step="0.1" placeholder="例如：6">
+            <label id="windInputLabel">Z高度实测平均风速 Uz（m/s）</label>
+            <input type="number" id="Uz" step="0.1" placeholder="例如：36.7">
         </div>
         <div class="form-item">
             <label>观测风向（0~360°，正北0°顺时针）</label>
             <input type="number" id="windDir" step="1" placeholder="例如：180">
         </div>
 
-        <div class="block-title">二、热带气旋阵风参数配置</div>
+        <div class="block-title">三、热带气旋阵风参数配置</div>
         <div class="form-item">
             <label>下垫面地形类别</label>
             <select id="terrain">
@@ -123,7 +154,7 @@
             </select>
         </div>
         <div class="form-item">
-            <label>基准平均风时长</label>
+            <label id="baseLabel">基准平均风时长（T<sub>0</sub>）</label>
             <select id="To">
                 <option value="3600">3600s（1小时平均）</option>
                 <option value="600">600s（10分钟平均）</option>
@@ -133,7 +164,7 @@
             </select>
         </div>
         <div class="form-item">
-            <label>目标阵风持续时长</label>
+            <label id="targetLabel">目标阵风持续时长（τ）</label>
             <select id="tau">
                 <option value="3">3s（瞬时阵风）</option>
                 <option value="60">60s</option>
@@ -146,24 +177,24 @@
         <button class="calc-btn" onclick="calcAll()">全部计算</button>
 
         <div class="result-box" id="resultBox">
-            <div class="result-item"><strong>10米基准平均风速：</strong><span id="u10"></span> m/s</div>
+            <div class="result-item"><strong>10米基准风速：</strong><span id="u10"></span> m/s</div>
             <div class="result-item"><strong>观测风向：</strong><span id="dirOut"></span> °</div>
             <div class="result-item"><strong>10m高度风动压：</strong><span id="pressure"></span> hPa</div>
-            <div class="result-item"><strong>查表阵风系数G：</strong><span id="gustFactor"></span></div>
-            <div class="result-item"><strong>目标阵风风速：</strong><span id="gustWind"></span> m/s</div>
+            <div class="result-item"><strong>查表阵风系数G<sub>τ,T<sub>0</sub></sub>：</strong><span id="gustFactor"></span></div>
+            <div class="result-item"><strong id="finalLabel">目标阵风风速：</strong><span id="finalWind"></span> m/s</div>
         </div>
 
         <div class="tip">
             技术说明：
             <br>1.高度订正采用中性层结对数风廓线，地表粗糙度z0=0.0015m，适用于开阔平原/近海中性大气；
-            <br>2.阵风系数严格采用热带气旋专用换算表，仅适用于台风、飓风强风场；
-            <br>3.阵风计算公式：阵风风速 = 10m基准平均风速 × 阵风系数；风动压=0.613×风速²/100；
+            <br>2.阵风系数严格采用热带气旋专用换算表G(τ,T<sub>0</sub>)：正向=基准平均风×系数=阵风；反向=阵风÷系数=基准平均风；
+            <br>3.风动压计算公式：0.613×风速²÷100；
             <br>4.若时距组合无原始表格系数，工具将直接终止计算并提示，不输出结果。
         </div>
     </div>
 
     <script>
-        // 完整还原原图表格，包含3s瞬时阵风全部系数
+        // 完整表格系数（含3s瞬时阵风）
         const gustTable = {
             inland:{
                 3600:{3:1.75,60:1.28,120:1.19,180:1.15,600:1.08},
@@ -196,44 +227,66 @@
         };
         const z0 = 0.0015;
 
-        function calcAll(){
-            // 每次计算先隐藏结果面板
-            document.getElementById('resultBox').style.display = "none";
+        // 切换模式文字提示
+        const modeRadios = document.querySelectorAll('input[name="calcMode"]');
+        const windInputLabel = document.getElementById('windInputLabel');
+        const baseLabel = document.getElementById('baseLabel');
+        const targetLabel = document.getElementById('targetLabel');
+        const finalLabel = document.getElementById('finalLabel');
+        modeRadios.forEach(radio=>{
+            radio.addEventListener('change',()=>{
+                if(radio.value==='forward'){
+                    windInputLabel.textContent = 'Z高度实测平均风速 Uz（m/s）';
+                    baseLabel.innerHTML = '基准平均风时长（T<sub>0</sub>）';
+                    targetLabel.textContent = '目标阵风持续时长（τ）';
+                    finalLabel.textContent = '目标阵风风速：';
+                }else{
+                    windInputLabel.textContent = 'Z高度实测阵风风速 Uz（m/s）';
+                    baseLabel.innerHTML = '阵风原始时长（T<sub>0</sub>）';
+                    targetLabel.textContent = '待求平均风时长（τ）';
+                    finalLabel.textContent = '目标平均风速：';
+                }
+            })
+        })
 
+        function calcAll(){
+            document.getElementById('resultBox').style.display = "none";
+            const calcMode = document.querySelector('input[name="calcMode"]:checked').value;
             const Z = parseFloat(document.getElementById('Z').value);
             const Uz = parseFloat(document.getElementById('Uz').value);
             const windDir = document.getElementById('windDir').value;
             const terrain = document.getElementById('terrain').value;
-            const To = parseInt(document.getElementById('To').value);
+            const T0 = parseInt(document.getElementById('To').value);
             const tau = parseInt(document.getElementById('tau').value);
 
-            // 基础风速高度合法性校验
             if(isNaN(Z)||isNaN(Uz)||Z<=0||Uz<=0){
                 alert("请填写有效的观测高度与风速数值");
                 return;
             }
 
-            // 校验该组合是否存在查表系数
             const terrainData = gustTable[terrain];
-            if (!terrainData || !terrainData[To] || terrainData[To][tau] === undefined) {
-                alert("当前选择的【基准平均风时长+阵风时长】组合无对应查表系数，无法完成阵风换算，请更换时距搭配");
+            if (!terrainData || !terrainData[T0] || terrainData[T0][tau] === undefined) {
+                alert("当前时长组合无对应查表系数，无法换算，请更换时长搭配");
                 return;
             }
+            const G = terrainData[T0][tau];
+            // 高度订正到10m高度风速
+            const U10_raw = Uz * Math.log(10/z0) / Math.log(Z/z0);
+            let U10_base, finalWind;
+            if(calcMode==='forward'){
+                U10_base = U10_raw;
+                finalWind = U10_base * G;
+            }else{
+                U10_base = U10_raw;
+                finalWind = U10_base / G;
+            }
+            const pressure = 0.613 * U10_base * U10_base / 100;
 
-            // 高度换算10m平均风速
-            const U10 = Uz * Math.log(10/z0) / Math.log(Z/z0);
-            // 10m高度风压计算
-            const pressure = 0.613 * U10 * U10 / 100;
-            // 获取阵风系数
-            const G = terrainData[To][tau];
-            const gustWind = U10 * G;
-
-            // 填充结果并展示
-            document.getElementById('u10').textContent = U10.toFixed(2);
+            document.getElementById('u10').textContent = U10_base.toFixed(2);
             document.getElementById('dirOut').textContent = windDir||"无";
             document.getElementById('pressure').textContent = pressure.toFixed(3);
             document.getElementById('gustFactor').textContent = G.toFixed(2);
-            document.getElementById('gustWind').textContent = gustWind.toFixed(2);
+            document.getElementById('finalWind').textContent = finalWind.toFixed(2);
             document.getElementById('resultBox').style.display = "block";
         }
     </script>
