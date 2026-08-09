@@ -11,31 +11,10 @@
             box-sizing: border-box;
             font-family: "Microsoft Yahei", sans-serif;
         }
-
         body {
             background-color: #f0f4f8;
             padding: 20px 12px;
-            position: relative;
         }
-
-        /* 右上角Logo：电脑端大一点，手机端自动缩小 */
-        .club-logo {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            width: clamp(70px, 10vw, 90px);
-            height: clamp(70px, 10vw, 90px);
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        .club-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-
         .container {
             max-width: 680px;
             margin: 0 auto;
@@ -44,56 +23,46 @@
             padding: 24px 20px;
             box-shadow: 0 4px 16px rgba(0, 80, 160, 0.12);
         }
-
         h1 {
             text-align: center;
             color: #1a365d;
-            font-size: clamp(18px, 4vw, 22px);
+            font-size: clamp(18px,4vw,22px);
             margin-bottom: 24px;
         }
-
         .block-title {
-            font-size: clamp(14px, 3.2vw, 16px);
+            font-size: clamp(14px,3.2vw,16px);
             font-weight: bold;
             color: #224;
             margin: 20px 0 10px;
             border-left: 4px solid #3182ce;
             padding-left: 8px;
         }
-
         .form-item {
             margin-bottom: 14px;
         }
-
         label {
             display: block;
-            font-size: clamp(14px, 3vw, 15px);
+            font-size: clamp(14px,3vw,15px);
             color: #2d3748;
             margin-bottom: 6px;
             font-weight: 500;
         }
-
         sub {
             font-size: 0.75em;
             vertical-align: sub;
         }
-
-        input,
-        select {
+        input, select {
             width: 100%;
             height: 46px;
             border: 1px solid #cbd5e0;
             border-radius: 8px;
             padding: 0 14px;
-            font-size: clamp(14px, 3vw, 16px);
+            font-size: clamp(14px,3vw,16px);
         }
-
-        input:focus,
-        select:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #3182ce;
         }
-
         .radio-group {
             display: flex;
             flex-wrap: wrap;
@@ -101,18 +70,15 @@
             min-height: 46px;
             align-items: center;
         }
-
         .radio-item {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-
         .radio-item input {
             width: auto;
             height: auto;
         }
-
         .calc-btn {
             width: 100%;
             height: 48px;
@@ -120,16 +86,14 @@
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: clamp(15px, 3vw, 16px);
+            font-size: clamp(15px,3vw,16px);
             cursor: pointer;
             transition: background 0.2s;
             margin-top: 12px;
         }
-
         .calc-btn:hover {
             background-color: #2b6cb0;
         }
-
         .result-box {
             margin-top: 22px;
             padding: 18px 16px;
@@ -138,44 +102,32 @@
             border-left: 5px solid #3182ce;
             display: none;
         }
-
         .result-item {
             margin: 8px 0;
-            font-size: clamp(14px, 3vw, 15px);
+            font-size: clamp(14px,3vw,15px);
         }
-
         .tip {
             margin-top: 18px;
-            font-size: clamp(12px, 2.7vw, 13px);
+            font-size: clamp(12px,2.7vw,13px);
             color: #718096;
             line-height: 1.8;
         }
-
-        /* 小屏手机再缩小Logo，避免遮挡标题 */
+        /* 底部版权 */
+        .copyright {
+            margin-top: 32px;
+            text-align: center;
+            font-size: clamp(12px,2.7vw,14px);
+            color: #667890;
+        }
+        /* 手机小屏适配 */
         @media (max-width: 480px) {
-            .club-logo {
-                top: 10px;
-                right: 10px;
-                width: 60px;
-                height: 60px;
-            }
-
             .container {
                 padding: 18px 14px;
-            }
-
-            h1 {
-                padding-top: 5px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 右上角固定Logo，已做手机/电脑自适应 -->
-    <div class="club-logo">
-        <img src="logo.png" alt="宝安中学气象社">
-    </div>
-
     <div class="container">
         <h1>10m高度风速+台风阵风双向换算工具</h1>
 
@@ -203,7 +155,6 @@
                     <label for="modeReverse">反向换算（阵风→平均风）</label>
                 </div>
             </div>
-
             <div class="block-title">二、高度订正输入</div>
             <div class="form-item">
                 <label>测风仪器离地高度 Z（m）</label>
@@ -217,7 +168,6 @@
                 <label>观测风向（0~360°，正北0°顺时针）</label>
                 <input type="number" id="windDir" step="1" placeholder="例如：180">
             </div>
-
             <div class="block-title">三、热带气旋阵风参数配置</div>
             <div class="form-item">
                 <label>下垫面地形类别</label>
@@ -264,7 +214,6 @@
                     <label for="avgReverse">短时距平均 → 长时距平均（例：1min→10min）</label>
                 </div>
             </div>
-
             <div class="block-title">二、基础参数</div>
             <div class="form-item">
                 <label>下垫面地形类别</label>
@@ -304,11 +253,12 @@
         <button class="calc-btn" onclick="calcAll()">全部计算</button>
 
         <div class="result-box" id="resultBox">
-            <div class="result-item"><strong id="u10Title">10米基准风速：</strong><span id="u10"></span> m/s</div>
+            <!-- 已修改：标题增加冒号 -->
+            <div class="result-item"><strong id="u10Title">原始时距风速：</strong><span id="u10"></span> m/s</div>
             <div class="result-item"><strong>观测风向：</strong><span id="dirOut"></span> °</div>
             <div class="result-item"><strong>10m高度风动压：</strong><span id="pressure"></span> hPa</div>
             <div class="result-item"><strong>查表阵风系数G<sub>τ,T<sub>0</sub></sub>：</strong><span id="gustFactor"></span></div>
-            <div class="result-item"><strong id="finalLabel">目标阵风风速：</strong><span id="finalWind"></span> m/s</div>
+            <div class="result-item"><strong id="finalLabel">目标时距平均风速：</strong><span id="finalWind"></span> m/s</div>
         </div>
 
         <div class="tip">
@@ -318,507 +268,47 @@
             <br>3.正向（长→短）=原始风速×系数；反向（短→长）=原始风速÷系数；
             <br>4.无匹配系数时直接弹窗报错，不输出计算结果。
         </div>
+
+        <!-- 底部版权文字 -->
+        <div class="copyright">BAMC 2026</div>
     </div>
 
     <script>
         const gustTable = {
             inland: {
                 3600: { 3: 1.75, 60: 1.28, 120: 1.19, 180: 1.15, 600: 1.08, 3600: 1.00 },
-                600: { 3: 1.66, 60: 1.21, 1.12, 1.09, 1.00, 0.926 },
-                180: { 3: 1.58, 60: 1.15, 1.07, 1.00 },
-                120: { 3: 1.55, 60: 1.13, 1.00 },
+                600: { 3: 1.66, 60: 1.21, 120: 1.12, 180: 1.09, 600: 1.00, 3600: 0.926 },
+                180: { 3: 1.58, 60: 1.15, 120: 1.07, 180: 1.00 },
+                120: { 3: 1.55, 60: 1.13, 120: 1.00 },
                 60: { 3: 1.49, 60: 1.00 }
             },
             offland: {
-                3600: { 3: 1.60, 60: 1.22, 1.15, 1.12, 1.06, 1.00 },
-                600: { 3: 1.52, 60: 1.16, 1.09, 1.06, 1.00, 0.943 },
-                180: { 3: 1.44, 60: 1.10, 1.04, 1.00 },
-                120: { 3: 1.42, 60: 1.08, 1.00 },
+                3600: { 3: 1.60, 60: 1.22, 120: 1.15, 180: 1.12, 600: 1.06, 3600: 1.00 },
+                600: { 3: 1.52, 60: 1.16, 120: 1.09, 180: 1.06, 600: 1.00, 3600: 0.943 },
+                180: { 3: 1.44, 60: 1.10, 120: 1.04, 180: 1.00 },
+                120: { 3: 1.42, 60: 1.08, 120: 1.00 },
                 60: { 3: 1.36, 60: 1.00 }
             },
             offsea: {
-                3600: { 3: 1.45, 60: 1.17, 1.11, 1.09, 1.05, 1.00 },
-                600: { 3: 1.38, 60: 1.11, 1.05, 1.03, 1.00, 0.952 },
-                180: { 3: 1.31, 60: 1.05, 1.00, 1.00 },
-                120: { 3: 1.28, 60: 1.03, 1.00 },
+                3600: { 3: 1.45, 60: 1.17, 120: 1.11, 180: 1.09, 600: 1.05, 3600: 1.00 },
+                600: { 3: 1.38, 60: 1.11, 120: 1.05, 180: 1.03, 600: 1.00, 3600: 0.952 },
+                180: { 3: 1.31, 60: 1.05, 120: 1.00, 180: 1.00 },
+                120: { 3: 1.28, 60: 1.03, 120: 1.00 },
                 60: { 3: 1.23, 60: 1.00 }
             },
             atsea: {
-                3600: { 3: 1.30, 60: 1.11, 1.07, 1.06, 1.03, 1.00 },
-                600: { 3: 1.23, 60: 1.05, 1.02, 1.00, 1.00, 0.971 },
-                180: { 3: 1.17, 60: 1.00, 1.00, 1.00 },
-                120: { 3: 1.15, 60: 1.00, 1.00 },
+                3600: { 3: 1.30, 60: 1.11, 120: 1.07, 180: 1.06, 600: 1.03, 3600: 1.00 },
+                600: { 3: 1.23, 60: 1.05, 120: 1.02, 180: 1.00, 600: 1.00, 3600: 0.971 },
+                180: { 3: 1.17, 60: 1.00, 120: 1.00, 180: 1.00 },
+                120: { 3: 1.15, 60: 1.00, 120: 1.00 },
                 60: { 3: 1.11, 60: 1.00 }
             }
         };
-
-        const z0 = 0.0015;
-
-        const mainModeRadios = document.querySelectorAll('input name="mainMode"');
-        const gustModule = document.getElementById('gustModule');
-        const avgTimeModule = document.getElementById('avgTimeModule');
-
-        mainModeRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'gust') {
-                    gustModule.style.display = 'block';
-                    avgTimeModule.style.display = 'none';
-                } else {
-                    gustModule.style.display = 'none';
-                    avgTimeModule.style.display = 'block';
-                }
-                document.getElementById('resultBox').style.display = 'none';
-            });
-        });
-
-        const modeRadios = document.querySelectorAll('input name="calcMode"');
-        const windInputLabel = document.getElementById('windInputLabel');
-        const baseLabel = document.getElementById('baseLabel');
-        const targetLabel = document.getElementById('targetLabel');
-        const finalLabel = document.getElementById('finalLabel');
-        const u10Title = document.getElementById('u10Title');
-
-        modeRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'forward') {
-                    windInputLabel.textContent = 'Z高度实测平均风速 Uz（m/s）';
-                    baseLabel.innerHTML = '基准平均风时长（T<sub>0</sub>）';
-                    targetLabel.textContent = '目标阵风持续时长（τ）';
-                    finalLabel.textContent = '目标阵风风速：';
-                    u10Title.textContent = '10米基准风速：';
-                } else {
-                    windInputLabel.textContent = 'Z高度实测阵风风速 Uz（m/s）';
-                    baseLabel.innerHTML = '阵风原始时长（τ）';
-                    targetLabel.textContent = '待求平均风时长（T<sub>0</sub>）';
-                    finalLabel.textContent = '目标平均风速：';
-                    u10Title.textContent = '10米阵风风速：';
-                }
-                document.getElementById('resultBox').style.display = 'none';
-            });
-        });
-
-        function calcAll() {
-            document.getElementById('resultBox').style.display = 'none';
-
-            const mainMode = document.querySelector('input[name="mainMode"]:checked').value;
-
-            if (mainMode === 'gust') {
-                calcGust();
-            } else {
-                calcAvgTimeConvert();
-            }
-        }
-
-        function calcGust() {
-            const calcMode = document.querySelector('input[name="calcMode"]:checked').value;
-            const Z = parseFloat(document.getElementById('Z').value);
-            const Uz = parseFloat(document.getElementById('Uz').value);
-            const windDir = document.getElementById('windDir').value;
-            const terrain = document.getElementById('terrain').value;
-
-            let T0, tau;
-
-            if (calcMode === 'forward') {
-                T0 = parseInt(document.getElementById('To').value);
-                tau = parseInt(document.getElementById('tau').value);
-            } else {
-                tau = parseInt(document.getElementById('To').value);
-                T0 = parseInt(document.getElementById('tau').value);
-            }
-
-            if (isNaN(Z) || isNaN(Uz) || Z <= 0 || Uz <= 0) {
-                alert('请填写有效的观测高度与风速数值');
-                return;
-            }
-
-            const terrainData = gustTable[terrain];
-
-            if (!terrainData || !terrainData[T0] || terrainData[T0][tau] === undefined) {
-                alert('当前时长组合无对应查表系数，无法换算，请更换时长搭配');
-                return;
-            }
-
-            const G = terrainData[T0][tau];
-            const U10_raw = Uz * Math.log(10 / z0) / Math.log(Z / z0);
-
-            let U10_base, finalWind;
-
-            if (calcMode === 'forward') {
-                U10_base = U10_raw;
-                finalWind = U10_base * G;
-            } else {
-                U10_base = U10_raw;
-                finalWind = U10_base / G;
-            }
-
-            const pressure = 0.613 * U10_base * U10_base / 100;
-
-            document.getElementById<[SILENT_never_used_51bce0c785ca2f68081bfa7d91973934]><[SILENT_never_used_51bce0c785ca2f68081bfa7d91973934]>
-我会继续修复刚才被截断的代码，并把 Logo 适配保留在右上角。核心是：电脑端正常显示，手机端自动缩小，不遮挡标题和内容。
-
-你用下面这一版完整代码即可：
-
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>10m高度风速+台风阵风双向换算工具</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft Yahei", sans-serif;
-        }
-
-        body {
-            background-color: #f0f4f8;
-            padding: 20px 12px;
-            position: relative;
-        }
-
-        /* 右上角Logo：保留并做自适应 */
-        .club-logo {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            width: clamp(70px, 10vw, 90px);
-            height: clamp(70px, 10vw, 90px);
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        .club-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-
-        .container {
-            max-width: 680px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 14px;
-            padding: 24px 20px;
-            box-shadow: 0 4px 16px rgba(0, 80, 160, 0.12);
-        }
-
-        h1 {
-            text-align: center;
-            color: #1a365d;
-            font-size: clamp(18px, 4vw, 22px);
-            margin-bottom: 24px;
-        }
-
-        .block-title {
-            font-size: clamp(14px, 3.2vw, 16px);
-            font-weight: bold;
-            color: #224;
-            margin: 20px 0 10px;
-            border-left: 4px solid #3182ce;
-            padding-left: 8px;
-        }
-
-        .form-item {
-            margin-bottom: 14px;
-        }
-
-        label {
-            display: block;
-            font-size: clamp(14px, 3vw, 15px);
-            color: #2d3748;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        sub {
-            font-size: 0.75em;
-            vertical-align: sub;
-        }
-
-        input,
-        select {
-            width: 100%;
-            height: 46px;
-            border: 1px solid #cbd5e0;
-            border-radius: 8px;
-            padding: 0 14px;
-            font-size: clamp(14px, 3vw, 16px);
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #3182ce;
-        }
-
-        .radio-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 20px;
-            min-height: 46px;
-            align-items: center;
-        }
-
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .radio-item input {
-            width: auto;
-            height: auto;
-        }
-
-        .calc-btn {
-            width: 100%;
-            height: 48px;
-            background-color: #3182ce;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: clamp(15px, 3vw, 16px);
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 12px;
-        }
-
-        .calc-btn:hover {
-            background-color: #2b6cb0;
-        }
-
-        .result-box {
-            margin-top: 22px;
-            padding: 18px 16px;
-            background-color: #ebf8ff;
-            border-radius: 10px;
-            border-left: 5px solid #3182ce;
-            display: none;
-        }
-
-        .result-item {
-            margin: 8px 0;
-            font-size: clamp(14px, 3vw, 15px);
-        }
-
-        .tip {
-            margin-top: 18px;
-            font-size: clamp(12px, 2.7vw, 13px);
-            color: #718096;
-            line-height: 1.8;
-        }
-
-        /* 小屏手机适配 */
-        @media (max-width: 480px) {
-            .club-logo {
-                top: 10px;
-                right: 10px;
-                width: 60px;
-                height: 60px;
-            }
-
-            .container {
-                padding: 18px 14px;
-            }
-
-            h1 {
-                padding-top: 5px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- 右上角固定Logo，已保留并做手机/电脑自适应 -->
-    <div class="club-logo">
-        <img src="logo.png" alt="宝安中学气象社">
-    </div>
-
-    <div class="container">
-        <h1>10m高度风速+台风阵风双向换算工具</h1>
-
-        <div class="block-title">一、换算总模式选择</div>
-        <div class="form-item radio-group">
-            <div class="radio-item">
-                <input type="radio" name="mainMode" id="modeGust" value="gust" checked>
-                <label for="modeGust">阵风换算（平均风↔瞬时阵风）</label>
-            </div>
-            <div class="radio-item">
-                <input type="radio" name="mainMode" id="modeAvgTime" value="avgTime">
-                <label for="modeAvgTime">平均风时距互换算（长时距↔短时距平均风）</label>
-            </div>
-        </div>
-
-        <div id="gustModule">
-            <div class="block-title">阵风换算方向</div>
-            <div class="form-item radio-group">
-                <div class="radio-item">
-                    <input type="radio" name="calcMode" id="modeForward" value="forward" checked>
-                    <label for="modeForward">正向换算（平均风→阵风）</label>
-                </div>
-                <div class="radio-item">
-                    <input type="radio" name="calcMode" id="modeReverse" value="reverse">
-                    <label for="modeReverse">反向换算（阵风→平均风）</label>
-                </div>
-            </div>
-
-            <div class="block-title">二、高度订正输入</div>
-            <div class="form-item">
-                <label>测风仪器离地高度 Z（m）</label>
-                <input type="number" id="Z" step="0.01" placeholder="例如：4.7 / 73">
-            </div>
-            <div class="form-item">
-                <label id="windInputLabel">Z高度实测平均风速 Uz（m/s）</label>
-                <input type="number" id="Uz" step="0.1" placeholder="例如：44.8">
-            </div>
-            <div class="form-item">
-                <label>观测风向（0~360°，正北0°顺时针）</label>
-                <input type="number" id="windDir" step="1" placeholder="例如：180">
-            </div>
-
-            <div class="block-title">三、热带气旋阵风参数配置</div>
-            <div class="form-item">
-                <label>下垫面地形类别</label>
-                <select id="terrain">
-                    <option value="inland">In-Land 内陆开阔地形</option>
-                    <option value="offland">Off-Land 海岸离岸风</option>
-                    <option value="offsea">Off-Sea 海岸向岸风</option>
-                    <option value="atsea">At-Sea 离岸20km以上远海</option>
-                </select>
-            </div>
-            <div class="form-item">
-                <label id="baseLabel">基准平均风时长（T<sub>0</sub>）</label>
-                <select id="To">
-                    <option value="3600">3600s（1小时平均）</option>
-                    <option value="600">600s（10分钟平均）</option>
-                    <option value="180">180s（3分钟平均）</option>
-                    <option value="120">120s（2分钟平均）</option>
-                    <option value="60">60s（1分钟平均）</option>
-                    <option value="3">3s（瞬时阵风）</option>
-                </select>
-            </div>
-            <div class="form-item">
-                <label id="targetLabel">目标阵风持续时长（τ）</label>
-                <select id="tau">
-                    <option value="3">3s（瞬时阵风）</option>
-                    <option value="60">60s（1分钟）</option>
-                    <option value="120">120s（2分钟平均）</option>
-                    <option value="180">180s（3分钟）</option>
-                    <option value="600">600s（10分钟）</option>
-                    <option value="3600">3600s（1小时平均）</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="avgTimeModule" style="display: none;">
-            <div class="block-title">平均风时距换算方向</div>
-            <div class="form-item radio-group">
-                <div class="radio-item">
-                    <input type="radio" name="avgDir" id="avgForward" value="long2short" checked>
-                    <label for="avgForward">长时距平均 → 短时距平均（例：10min→1min）</label>
-                </div>
-                <div class="radio-item">
-                    <input type="radio" name="avgDir" id="avgReverse" value="short2long">
-                    <label for="avgReverse">短时距平均 → 长时距平均（例：1min→10min）</label>
-                </div>
-            </div>
-
-            <div class="block-title">二、基础参数</div>
-            <div class="form-item">
-                <label>下垫面地形类别</label>
-                <select id="avgTerrain">
-                    <option value="inland">In-Land 内陆开阔地形</option>
-                    <option value="offland">Off-Land 海岸离岸风</option>
-                    <option value="offsea">Off-Sea 海岸向岸风</option>
-                    <option value="atsea">At-Sea 离岸20km以上远海</option>
-                </select>
-            </div>
-            <div class="form-item">
-                <label>原始时距风速（m/s）</label>
-                <input type="number" id="avgWindVal" step="0.1" placeholder="例如：36.55">
-            </div>
-            <div class="form-item">
-                <label>原始平均风时距 T<sub>0</sub></label>
-                <select id="avgT0">
-                    <option value="3600">3600s（1小时平均）</option>
-                    <option value="600">600s（10分钟平均）</option>
-                    <option value="180">180s（3分钟平均）</option>
-                    <option value="120">120s（2分钟平均）</option>
-                    <option value="60">60s（1分钟平均）</option>
-                </select>
-            </div>
-            <div class="form-item">
-                <label>目标平均风时距 τ</label>
-                <select id="avgTau">
-                    <option value="3600">3600s（1小时平均）</option>
-                    <option value="600">600s（10分钟平均）</option>
-                    <option value="180">180s（3分钟平均）</option>
-                    <option value="120">120s（2分钟平均）</option>
-                    <option value="60">60s（1分钟平均）</option>
-                </select>
-            </div>
-        </div>
-
-        <button class="calc-btn" onclick="calcAll()">全部计算</button>
-
-        <div class="result-box" id="resultBox">
-            <div class="result-item"><strong id="u10Title">10米基准风速：</strong><span id="u10"></span> m/s</div>
-            <div class="result-item"><strong>观测风向：</strong><span id="dirOut"></span> °</div>
-            <div class="result-item"><strong>10m高度风动压：</strong><span id="pressure"></span> hPa</div>
-            <div class="result-item"><strong>查表阵风系数G<sub>τ,T<sub>0</sub></sub>：</strong><span id="gustFactor"></span></div>
-            <div class="result-item"><strong id="finalLabel">目标阵风风速：</strong><span id="finalWind"></span> m/s</div>
-        </div>
-
-        <div class="tip">
-            技术说明：
-            <br>1.高度订正采用中性层结对数风廓线，地表 roughness z0=0.0015m；
-            <br>2.阵风/平均风时距换算共用热带气旋G(τ,T<sub>0</sub>)系数表；
-            <br>3.正向（长→短）=原始风速×系数；反向（短→长）=原始风速÷系数；
-            <br>4.无匹配系数时直接弹窗报错，不输出计算结果。
-        </div>
-    </div>
-
-    <script>
-        const gustTable = {
-            inland: {
-                3600: { 3: 1.75, 60: 1.28, 120: 1.19, 180: 1.15, 600: 1.08, 3600: 1.00 },
-                600: { 3: 1.66, 60: 1.21, 1.12, 1.09, 1.00, 0.926 },
-                180: { 3: 1.58, 60: 1.15, 1.07, 1.00 },
-                120: { 3: 1.55, 60: 1.13, 1.00 },
-                60: { 3: 1.49, 60: 1.00 }
-            },
-            offland: {
-                3600: { 3: 1.60, 60: 1.22, 1.15, 1.12, 1.06, 1.00 },
-                600: { 3: 1.52, 60: 1.16, 1.09, 1.06, 1.00, 0.943 },
-                180: { 3: 1.44, 60: 1.10, 1.04, 1.00 },
-                120: { 3: 1.42, 60: 1.08, 1.00 },
-                60: { 3: 1.36, 60: 1.00 }
-            },
-            offsea: {
-                3600: { 3: 1.45, 60: 1.17, 1.11, 1.09, 1.05, 1.00 },
-                600: { 3: 1.38, 60: 1.11, 1.05, 1.03, 1.00, 0.952 },
-                180: { 3: 1.31, 60: 1.05, 1.00, 1.00 },
-                120: { 3: 1.28, 60: 1.03, 1.00 },
-                60: { 3: 1.23, 60: 1.00 }
-            },
-            atsea: {
-                3600: { 3: 1.30, 60: 1.11, 1.07, 1.06, 1.03, 1.00 },
-                600: { 3: 1.23, 60: 1.05, 1.02, 1.00, 1.00, 0.971 },
-                180: { 3: 1.17, 60: 1.00, 1.00, 1.00 },
-                120: { 3: 1.15, 60: 1.00, 1.00 },
-                60: { 3: 1.11, 60: 1.00 }
-            }
-        };
-
         const z0 = 0.0015;
 
         const mainModeRadios = document.querySelectorAll('input[name="mainMode"]');
         const gustModule = document.getElementById('gustModule');
         const avgTimeModule = document.getElementById('avgTimeModule');
-
         mainModeRadios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (radio.value === 'gust') {
@@ -838,7 +328,6 @@
         const targetLabel = document.getElementById('targetLabel');
         const finalLabel = document.getElementById('finalLabel');
         const u10Title = document.getElementById('u10Title');
-
         modeRadios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (radio.value === 'forward') {
@@ -874,7 +363,6 @@
             const Uz = parseFloat(document.getElementById('Uz').value);
             const windDir = document.getElementById('windDir').value;
             const terrain = document.getElementById('terrain').value;
-
             let T0, tau;
             if (calcMode === 'forward') {
                 T0 = parseInt(document.getElementById('To').value);
@@ -883,22 +371,17 @@
                 tau = parseInt(document.getElementById('To').value);
                 T0 = parseInt(document.getElementById('tau').value);
             }
-
-            if (isNaN(Z) || isNaN(Uz) || Z <= 0 || Uz <= 0) {
+            if (isNaN(Z) || isNaN(Uz) || Z <= 0) {
                 alert('请填写有效的观测高度与风速数值');
                 return;
             }
-
             const terrainData = gustTable[terrain];
-
             if (!terrainData || !terrainData[T0] || terrainData[T0][tau] === undefined) {
                 alert('当前时长组合无对应查表系数，无法换算，请更换时长搭配');
                 return;
             }
-
             const G = terrainData[T0][tau];
             const U10_raw = Uz * Math.log(10 / z0) / Math.log(Z / z0);
-
             let U10_base, finalWind;
             if (calcMode === 'forward') {
                 U10_base = U10_raw;
@@ -907,9 +390,7 @@
                 U10_base = U10_raw;
                 finalWind = U10_base / G;
             }
-
             const pressure = 0.613 * U10_base * U10_base / 100;
-
             document.getElementById('u10').textContent = U10_base.toFixed(2);
             document.getElementById('dirOut').textContent = windDir || '无';
             document.getElementById('pressure').textContent = pressure.toFixed(3);
@@ -924,29 +405,23 @@
             const windVal = parseFloat(document.getElementById('avgWindVal').value);
             const T0 = parseInt(document.getElementById('avgT0').value);
             const tau = parseInt(document.getElementById('avgTau').value);
-
             if (isNaN(windVal) || windVal <= 0) {
                 alert('请输入有效的原始风速');
                 return;
             }
-
             const terrainData = gustTable[terrain];
-
             if (!terrainData || !terrainData[T0] || terrainData[T0][tau] === undefined) {
                 alert('该地形+时距组合无匹配换算系数，无法计算');
                 return;
             }
-
             const G = terrainData[T0][tau];
-
             let targetWind;
             if (avgDir === 'long2short') {
                 targetWind = windVal * G;
             } else {
                 targetWind = windVal / G;
             }
-
-            document.getElementById('u10Title').textContent = '原始时距风速';
+            document.getElementById('u10Title').textContent = '原始时距风速：';
             document.getElementById('u10').textContent = windVal.toFixed(2);
             document.getElementById('dirOut').textContent = '时距换算无风向';
             document.getElementById('pressure').textContent = (0.613 * targetWind * targetWind / 100).toFixed(3);
