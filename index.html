@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10m高度风速+台风阵风双向换算工具</title>
+    <title>10m高度风速+台风阵风双向换算工具（含平均风时距换算）</title>
     <style>
         * {
             margin: 0;
@@ -16,7 +16,7 @@
             padding: 40px 20px;
         }
         .container {
-            max-width: 620px;
+            max-width: 680px;
             margin: 0 auto;
             background: #fff;
             border-radius: 14px;
@@ -33,7 +33,7 @@
             font-size:16px;
             font-weight:bold;
             color:#224;
-            margin:20px 0 10px;
+            margin:24px 0 12px;
             border-left:4px solid #3182ce;
             padding-left:8px;
         }
@@ -111,69 +111,139 @@
             color: #718096;
             line-height:1.8;
         }
+        .divider{
+            height:1px;
+            background:#cbd5e0;
+            margin:30px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>10m高度风速+台风阵风双向换算工具</h1>
 
-        <div class="block-title">一、换算模式选择</div>
+        <!-- 模式总选择：阵风换算 / 平均风时距换算 -->
+        <div class="block-title">一、换算总模式选择</div>
         <div class="form-item radio-group">
             <div class="radio-item">
-                <input type="radio" name="calcMode" id="modeForward" value="forward" checked>
-                <label for="modeForward">正向换算（平均风→阵风）</label>
+                <input type="radio" name="mainMode" id="modeGust" value="gust" checked>
+                <label for="modeGust">阵风换算（平均风↔瞬时阵风）</label>
             </div>
             <div class="radio-item">
-                <input type="radio" name="calcMode" id="modeReverse" value="reverse">
-                <label for="modeReverse">反向换算（阵风→平均风）</label>
+                <input type="radio" name="mainMode" id="modeAvgTime" value="avgTime">
+                <label for="modeAvgTime">平均风时距互换算（长时距↔短时距平均风）</label>
             </div>
         </div>
 
-        <div class="block-title">二、高度订正输入</div>
-        <div class="form-item">
-            <label>测风仪器离地高度 Z（m）</label>
-            <input type="number" id="Z" step="0.01" placeholder="例如：4.7">
-        </div>
-        <div class="form-item">
-            <label id="windInputLabel">Z高度实测平均风速 Uz（m/s）</label>
-            <input type="number" id="Uz" step="0.1" placeholder="例如：36.7">
-        </div>
-        <div class="form-item">
-            <label>观测风向（0~360°，正北0°顺时针）</label>
-            <input type="number" id="windDir" step="1" placeholder="例如：180">
+        <!-- 原有阵风换算模块 -->
+        <div id="gustModule">
+            <div class="block-title">阵风换算方向</div>
+            <div class="form-item radio-group">
+                <div class="radio-item">
+                    <input type="radio" name="calcMode" id="modeForward" value="forward" checked>
+                    <label for="modeForward">正向换算（平均风→阵风）</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="calcMode" id="modeReverse" value="reverse">
+                    <label for="modeReverse">反向换算（阵风→平均风）</label>
+                </div>
+            </div>
+
+            <div class="block-title">二、高度订正输入</div>
+            <div class="form-item">
+                <label>测风仪器离地高度 Z（m）</label>
+                <input type="number" id="Z" step="0.01" placeholder="例如：4.7 / 73">
+            </div>
+            <div class="form-item">
+                <label id="windInputLabel">Z高度实测平均风速 Uz（m/s）</label>
+                <input type="number" id="Uz" step="0.1" placeholder="例如：44.8">
+            </div>
+            <div class="form-item">
+                <label>观测风向（0~360°，正北0°顺时针）</label>
+                <input type="number" id="windDir" step="1" placeholder="例如：180">
+            </div>
+
+            <div class="block-title">三、热带气旋阵风参数配置</div>
+            <div class="form-item">
+                <label>下垫面地形类别</label>
+                <select id="terrain">
+                    <option value="inland">In-Land 内陆开阔地形</option>
+                    <option value="offland">Off-Land 海岸离岸风</option>
+                    <option value="offsea">Off-Sea 海岸向岸风</option>
+                    <option value="atsea">At-Sea 离岸20km以上远海</option>
+                </select>
+            </div>
+            <div class="form-item">
+                <label id="baseLabel">基准平均风时长（T<sub>0</sub>）</label>
+                <select id="To">
+                    <option value="3600">3600s（1小时平均）</option>
+                    <option value="600">600s（10分钟平均）</option>
+                    <option value="180">180s（3分钟平均）</option>
+                    <option value="120">120s（2分钟平均）</option>
+                    <option value="60">60s（1分钟平均）</option>
+                    <option value="3">3s（瞬时阵风）</option>
+                </select>
+            </div>
+            <div class="form-item">
+                <label id="targetLabel">目标阵风持续时长（τ）</label>
+                <select id="tau">
+                    <option value="3">3s（瞬时阵风）</option>
+                    <option value="60">60s（1分钟）</option>
+                    <option value="120">120s（2分钟平均）</option>
+                    <option value="180">180s（3分钟）</option>
+                    <option value="600">600s（10分钟）</option>
+                    <option value="3600">3600s（1小时平均）</option>
+                </select>
+            </div>
         </div>
 
-        <div class="block-title">三、热带气旋阵风参数配置</div>
-        <div class="form-item">
-            <label>下垫面地形类别</label>
-            <select id="terrain">
-                <option value="inland">In-Land 内陆开阔地形</option>
-                <option value="offland">Off-Land 海岸离岸风</option>
-                <option value="offsea">Off-Sea 海岸向岸风</option>
-                <option value="atsea">At-Sea 离岸20km以上远海</option>
-            </select>
-        </div>
-        <div class="form-item">
-            <label id="baseLabel">基准平均风时长（T<sub>0</sub>）</label>
-            <select id="To">
-                <option value="3600">3600s（1小时平均）</option>
-                <option value="600">600s（10分钟平均）</option>
-                <option value="180">180s（3分钟平均）</option>
-                <option value="120">120s（2分钟平均）</option>
-                <option value="60">60s（1分钟平均）</option>
-                <option value="3">3s（瞬时阵风）</option>
-            </select>
-        </div>
-        <div class="form-item">
-            <label id="targetLabel">目标阵风持续时长（τ）</label>
-            <select id="tau">
-                <option value="3">3s（瞬时阵风）</option>
-                <option value="60">60s</option>
-                <option value="120">120s（2分钟平均）</option>
-                <option value="180">180s</option>
-                <option value="600">600s</option>
-                <option value="3600">3600s（1小时平均）</option>
-            </select>
+        <!-- 新增：平均风时距换算模块（独立面板） -->
+        <div id="avgTimeModule" style="display:none;">
+            <div class="block-title">平均风时距换算方向</div>
+            <div class="form-item radio-group">
+                <div class="radio-item">
+                    <input type="radio" name="avgDir" id="avgForward" value="long2short" checked>
+                    <label for="avgForward">长时距平均 → 短时距平均（例：10min→1min）</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="avgDir" id="avgReverse" value="short2long">
+                    <label for="avgReverse">短时距平均 → 长时距平均（例：1min→10min）</label>
+                </div>
+            </div>
+            <div class="block-title">二、基础参数</div>
+            <div class="form-item">
+                <label>下垫面地形类别</label>
+                <select id="avgTerrain">
+                    <option value="inland">In-Land 内陆开阔地形</option>
+                    <option value="offland">Off-Land 海岸离岸风</option>
+                    <option value="offsea">Off-Sea 海岸向岸风</option>
+                    <option value="atsea">At-Sea 离岸20km以上远海</option>
+                </select>
+            </div>
+            <div class="form-item">
+                <label>原始时距风速（m/s）</label>
+                <input type="number" id="avgWindVal" step="0.1" placeholder="例如：36.55">
+            </div>
+            <div class="form-item">
+                <label>原始平均风时距 T<sub>0</sub></label>
+                <select id="avgT0">
+                    <option value="3600">3600s（1小时平均）</option>
+                    <option value="600">600s（10分钟平均）</option>
+                    <option value="180">180s（3分钟平均）</option>
+                    <option value="120">120s（2分钟平均）</option>
+                    <option value="60">60s（1分钟平均）</option>
+                </select>
+            </div>
+            <div class="form-item">
+                <label>目标平均风时距 τ</label>
+                <select id="avgTau">
+                    <option value="3600">3600s（1小时平均）</option>
+                    <option value="600">600s（10分钟平均）</option>
+                    <option value="180">180s（3分钟平均）</option>
+                    <option value="120">120s（2分钟平均）</option>
+                    <option value="60">60s（1分钟平均）</option>
+                </select>
+            </div>
         </div>
 
         <button class="calc-btn" onclick="calcAll()">全部计算</button>
@@ -188,40 +258,40 @@
 
         <div class="tip">
             技术说明：
-            <br>1.高度订正采用中性层结对数风廓线，地表粗糙度z0=0.0015m，适用于开阔平原/近海中性大气；
-            <br>2.阵风系数严格采用热带气旋专用换算表G(τ,T<sub>0</sub>)：正向=基准平均风×系数=阵风；反向=阵风÷系数=基准平均风；
-            <br>3.风动压计算公式：0.613×风速²÷100；
-            <br>4.若时距组合无原始表格系数，工具将直接终止计算并提示，不输出结果。
+            <br>1.高度订正采用中性层结对数风廓线，地表粗糙度z0=0.0015m；
+            <br>2.阵风/平均风时距换算共用热带气旋G(τ,T<sub>0</sub>)系数表；
+            <br>3.正向（长→短）=原始风速×系数；反向（短→长）=原始风速÷系数；
+            <br>4.无匹配系数时直接弹窗报错，不输出计算结果。
         </div>
     </div>
 
     <script>
-        // 完整表格系数（含3s瞬时阵风）
+        // 阵风系数总表
         const gustTable = {
             inland:{
-                3600:{3:1.75,60:1.28,120:1.19,180:1.15,600:1.08},
-                600:{3:1.66,60:1.21,120:1.12,180:1.09,600:1.00},
+                3600:{3:1.75,60:1.28,120:1.19,180:1.15,600:1.08,3600:1.00},
+                600:{3:1.66,60:1.21,120:1.12,180:1.09,600:1.00,3600:0.926},
                 180:{3:1.58,60:1.15,120:1.07,180:1.00},
                 120:{3:1.55,60:1.13,120:1.00},
                 60:{3:1.49,60:1.00}
             },
             offland:{
-                3600:{3:1.60,60:1.22,120:1.15,180:1.12,600:1.06},
-                600:{3:1.52,60:1.16,120:1.09,180:1.06,600:1.00},
+                3600:{3:1.60,60:1.22,120:1.15,180:1.12,600:1.06,3600:1.00},
+                600:{3:1.52,60:1.16,120:1.09,180:1.06,600:1.00,3600:0.943},
                 180:{3:1.44,60:1.10,120:1.04,180:1.00},
                 120:{3:1.42,60:1.08,120:1.00},
                 60:{3:1.36,60:1.00}
             },
             offsea:{
-                3600:{3:1.45,60:1.17,120:1.11,180:1.09,600:1.05},
-                600:{3:1.38,60:1.11,120:1.05,180:1.03,600:1.00},
+                3600:{3:1.45,60:1.17,120:1.11,180:1.09,600:1.05,3600:1.00},
+                600:{3:1.38,60:1.11,120:1.05,180:1.03,600:1.00,3600:0.952},
                 180:{3:1.31,60:1.05,120:1.00,180:1.00},
                 120:{3:1.28,60:1.03,120:1.00},
                 60:{3:1.23,60:1.00}
             },
             atsea:{
-                3600:{3:1.30,60:1.11,120:1.07,180:1.06,600:1.03},
-                600:{3:1.23,60:1.05,120:1.02,180:1.00,600:1.00},
+                3600:{3:1.30,60:1.11,120:1.07,180:1.06,600:1.03,3600:1.00},
+                600:{3:1.23,60:1.05,120:1.02,180:1.00,600:1.00,3600:0.971},
                 180:{3:1.17,60:1.00,120:1.00,180:1.00},
                 120:{3:1.15,60:1.00,120:1.00},
                 60:{3:1.11,60:1.00}
@@ -229,7 +299,24 @@
         };
         const z0 = 0.0015;
 
-        // 切换模式文字提示
+        // 主模式切换：阵风换算 / 平均风时距换算
+        const mainModeRadios = document.querySelectorAll('input[name="mainMode"]');
+        const gustModule = document.getElementById('gustModule');
+        const avgTimeModule = document.getElementById('avgTimeModule');
+        mainModeRadios.forEach(radio=>{
+            radio.addEventListener('change',()=>{
+                if(radio.value==='gust'){
+                    gustModule.style.display = 'block';
+                    avgTimeModule.style.display = 'none';
+                }else{
+                    gustModule.style.display = 'none';
+                    avgTimeModule.style.display = 'block';
+                }
+                document.getElementById('resultBox').style.display = 'none';
+            })
+        })
+
+        // 阵风模式内部文字切换
         const modeRadios = document.querySelectorAll('input[name="calcMode"]');
         const windInputLabel = document.getElementById('windInputLabel');
         const baseLabel = document.getElementById('baseLabel');
@@ -251,11 +338,23 @@
                     finalLabel.textContent = '目标平均风速：';
                     u10Title.textContent = '10米阵风风速：';
                 }
+                document.getElementById('resultBox').style.display = 'none';
             })
         })
 
+        // 总计算入口
         function calcAll(){
             document.getElementById('resultBox').style.display = "none";
+            const mainMode = document.querySelector('input[name="mainMode"]:checked').value;
+            if(mainMode === 'gust'){
+                calcGust();
+            }else{
+                calcAvgTimeConvert();
+            }
+        }
+
+        // 原有阵风换算计算逻辑
+        function calcGust(){
             const calcMode = document.querySelector('input[name="calcMode"]:checked').value;
             const Z = parseFloat(document.getElementById('Z').value);
             const Uz = parseFloat(document.getElementById('Uz').value);
@@ -266,7 +365,6 @@
                 T0 = parseInt(document.getElementById('To').value);
                 tau = parseInt(document.getElementById('tau').value);
             }else{
-                //反向模式互换两个时长，To选择框是τ阵风时长，tau选择框是T0基准时长
                 tau = parseInt(document.getElementById('To').value);
                 T0 = parseInt(document.getElementById('tau').value);
             }
@@ -282,7 +380,6 @@
                 return;
             }
             const G = terrainData[T0][tau];
-            // 高度订正到10m高度风速
             const U10_raw = Uz * Math.log(10/z0) / Math.log(Z/z0);
             let U10_base, finalWind;
             if(calcMode==='forward'){
@@ -299,6 +396,43 @@
             document.getElementById('pressure').textContent = pressure.toFixed(3);
             document.getElementById('gustFactor').textContent = G.toFixed(2);
             document.getElementById('finalWind').textContent = finalWind.toFixed(2);
+            document.getElementById('resultBox').style.display = "block";
+        }
+
+        // 新增：平均风时距换算计算逻辑
+        function calcAvgTimeConvert(){
+            const avgDir = document.querySelector('input[name="avgDir"]:checked').value;
+            const terrain = document.getElementById('avgTerrain').value;
+            const windVal = parseFloat(document.getElementById('avgWindVal').value);
+            const T0 = parseInt(document.getElementById('avgT0').value);
+            const tau = parseInt(document.getElementById('avgTau').value);
+
+            if(isNaN(windVal) || windVal <= 0){
+                alert("请输入有效的原始风速");
+                return;
+            }
+            const terrainData = gustTable[terrain];
+            if (!terrainData || !terrainData[T0] || terrainData[T0][tau] === undefined) {
+                alert("该地形+时距组合无匹配换算系数，无法计算");
+                return;
+            }
+            const G = terrainData[T0][tau];
+            let targetWind;
+            if(avgDir === 'long2short'){
+                // 长时距→短时距 风速放大 ×G
+                targetWind = windVal * G;
+            }else{
+                // 短时距→长时距 风速缩小 ÷G
+                targetWind = windVal / G;
+            }
+            // 填充结果面板
+            document.getElementById('u10Title').textContent = '原始时距风速';
+            document.getElementById('u10').textContent = windVal.toFixed(2);
+            document.getElementById('dirOut').textContent = "时距换算无风向";
+            document.getElementById('pressure').textContent = (0.613 * targetWind * targetWind / 100).toFixed(3);
+            document.getElementById('gustFactor').textContent = G.toFixed(2);
+            document.getElementById('finalLabel').textContent = '目标时距平均风速：';
+            document.getElementById('finalWind').textContent = targetWind.toFixed(2);
             document.getElementById('resultBox').style.display = "block";
         }
     </script>
